@@ -11,7 +11,7 @@ exports.createBook = async (req, res) => {
 
 exports.getAllBooks = async (req, res) => {
   try {
-    const books = await Book.find().sort({ createdAt: -1 });
+    const books = await Book.find().sort({ createdAt: -1 }).limit(7);
     res.json(books);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -43,6 +43,16 @@ exports.deleteBook = async (req, res) => {
     const deleted = await Book.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ error: "Book not found" });
     res.json({ message: "Book deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getBooksByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const books = await Book.find({ category }).sort({ createdAt: -1 }).limit(7);
+    res.json(books);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
