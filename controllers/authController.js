@@ -38,7 +38,7 @@ exports.login = async (req, res) => {
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({ user: { id: user._id, name: user.name, email: user.email } });
+    res.json(user);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

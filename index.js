@@ -5,6 +5,9 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const bookRoutes = require("./routes/bookRoutes");
+const teacherRoutes = require("./routes/teacherRoutes");
+const instituteRoutes = require("./routes/instituteRoutes");
+
 
 dotenv.config();
 const app = express();
@@ -16,8 +19,9 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
-
 app.use("/api/books", bookRoutes);
+app.use("/api/teachers", teacherRoutes);
+app.use("/api/institutes", instituteRoutes);
 
 
 // DB & Server
