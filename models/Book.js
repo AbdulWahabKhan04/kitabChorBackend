@@ -10,7 +10,6 @@ const bookSchema = new mongoose.Schema({
   bookImage: { type: String, required: true },
   priceNew: { type: Number, required: true },
   ourPrice: { type: Number, required: true },
-  sameDayDelivery: { type: Boolean, default: false },
   language: { type: String, required: true },
   noOfPages: { type: Number, required: true },
   editionDate: { type: Date, required: true },

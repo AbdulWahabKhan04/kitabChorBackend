@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema(
   {
     user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
       required: true,
     },
     referBy: {
@@ -14,7 +13,7 @@ const orderSchema = new mongoose.Schema(
       {
         bookId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",  // Reference to Product model if you have one
+          ref: "Book",  // Reference to Product model if you have one
           required: true,
         },
         quantity: {

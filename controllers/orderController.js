@@ -1,10 +1,23 @@
-const Order = require("../models/orderModel");
-const Teacher = require("../models/teacherModel");
+const Order = require("../models/Order");
+const Teacher = require("../models/Teacher");
 
 // Create a new order
+const generateTrackingNumber = () => {
+  const prefix = "KC"; // For KitabChor
+  const timestamp = Date.now().toString().slice(-6); // Last 6 digits of timestamp
+  const random = Math.floor(1000 + Math.random() * 9000); // 4-digit random number
+  return `${prefix}-${timestamp}-${random}`;
+};
+
 exports.createOrder = async (req, res) => {
   try {
-    const order = new Order(req.body);
+    const trackingNumber = generateTrackingNumber();
+    const order = new Order({
+      ...req.body,
+      deliveryTrackingNumber: trackingNumber,
+      orderDate: new Date(), // optionally ensure this is saved
+    });
+
     await order.save();
     res.status(201).json(order);
   } catch (error) {
@@ -15,7 +28,7 @@ exports.createOrder = async (req, res) => {
 // Get all orders
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate("user").populate("products.bookId");
+    const orders = await Order.find();
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch orders" });
@@ -25,10 +38,12 @@ exports.getAllOrders = async (req, res) => {
 // Get order by ID
 exports.getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).populate("user").populate("products.bookId");
+    const order = await Order.findById(req.params.id).populate("products.bookId");
+    console.log(order)
     if (!order) return res.status(404).json({ error: "Order not found" });
     res.status(200).json(order);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: "Failed to get order" });
   }
 };
@@ -62,6 +77,7 @@ exports.updateOrder = async (req, res) => {
     res.status(400).json({ error: "Failed to update order", details: error.message });
   }
 };
+
 
 // Delete order
 exports.deleteOrder = async (req, res) => {
