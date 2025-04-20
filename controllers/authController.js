@@ -1,3 +1,4 @@
+const Teacher = require("../models/Teacher");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
@@ -26,7 +27,19 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password ,role } = req.body;
+    if(role == "teacher"){
+      const teacher = await Teacher.findOne({ email });
+      if (!teacher) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+      const token = createToken(teacher);
+      res.cookie("token", token, {
+        httpOnly: true,
+        maxAge: 3 * 24 * 60 * 60 * 1000,
+      });
+      return res.json(teacher);
+    }
     const user = await User.findOne({ email });
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: "Invalid credentials" });
