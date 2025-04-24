@@ -30,6 +30,7 @@ exports.login = async (req, res) => {
     const { email, password ,role } = req.body;
     if(role == "teacher"){
       const teacher = await Teacher.findOne({ email });
+      console.log(teacher)
       if (!teacher) {
         return res.status(401).json({ error: "Invalid credentials" });
       }

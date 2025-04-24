@@ -9,6 +9,7 @@ const teacherRoutes = require("./routes/teacherRoutes");
 const instituteRoutes = require("./routes/instituteRoutes");
 const orderRoutes = require("./routes/orderRoutes")
 const messageRoutes = require("./routes/messageRoutes");
+const withdrawls = require("./routes/withdrawls");
 
 dotenv.config();
 const app = express();
@@ -25,6 +26,7 @@ app.use("/api/teachers", teacherRoutes);
 app.use("/api/institutes", instituteRoutes);
 app.use("/api/orders",orderRoutes );
 app.use("/api/messages", messageRoutes);
+app.use("/api/withdrawls", withdrawls);
 
 // DB & Server
 mongoose.connect(process.env.MONGO_URI)

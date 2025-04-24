@@ -71,6 +71,9 @@ const orderSchema = new mongoose.Schema(
     deliveryTrackingNumber: {
       type: String,
     },
+    profit:{
+      type: Number,
+    }
   },
   { timestamps: true }
 );

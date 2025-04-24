@@ -4,6 +4,7 @@ const orderController = require("../controllers/orderController");
 const Order = require("../models/Order");
 
 // CRUD routes
+router.get('/byReferCode/', orderController.getOrdersByReferCode); 
 router.post("/", orderController.createOrder);
 router.get("/", orderController.getAllOrders);
 router.get("/:id", orderController.getOrderById);

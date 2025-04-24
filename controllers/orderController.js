@@ -51,22 +51,34 @@ exports.getOrderById = async (req, res) => {
 // Update order (with teacher earnings logic)
 exports.updateOrder = async (req, res) => {
   try {
-    const { paymentStatus, totalAmount, referBy } = req.body;
-
+    const { paymentStatus, totalAmount, referBy, status, profit } = req.body;
+    // console.log(referBy)
     const existingOrder = await Order.findById(req.params.id);
     if (!existingOrder) return res.status(404).json({ error: "Order not found" });
 
-    // If payment is being completed now
     const wasPending = existingOrder.paymentStatus !== "completed" && paymentStatus === "completed";
 
+    // Update order with new data
     const updatedOrder = await Order.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
 
-    if (wasPending && referBy) {
+    // Award referral bonus if:
+    // 1. Payment status just changed to completed (wasPending)
+    // 2. Order has a valid referBy value
+    // 3. Status is delivered
+    // 4. Profit is a valid number
+    if (
+      wasPending &&
+      referBy &&
+      status === "delivered" &&
+      profit &&
+      !isNaN(profit)
+    ) {
       const teacher = await Teacher.findOne({ referCode: referBy });
+      console.log(teacher)
       if (teacher) {
-        const bonus = totalAmount * 0.10;
+        const bonus = parseFloat(profit) * 0.10;
         teacher.earnings += bonus;
         await teacher.save();
       }
@@ -79,6 +91,7 @@ exports.updateOrder = async (req, res) => {
 };
 
 
+
 // Delete order
 exports.deleteOrder = async (req, res) => {
   try {
@@ -87,5 +100,21 @@ exports.deleteOrder = async (req, res) => {
     res.status(200).json({ message: "Order deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: "Failed to delete order" });
+  }
+};
+
+exports.getOrdersByReferCode = async (req, res) => {
+  const referCode = req.query.code;
+  console.log(referCode)
+  if (!referCode) {
+    return res.status(400).json({ message: "Referral code is required" });
+  }
+
+  try {
+    const orders = await Order.find({ referBy: referCode }).populate('user', 'name email');
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching referred orders:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
