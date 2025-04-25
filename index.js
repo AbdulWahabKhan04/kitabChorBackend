@@ -31,6 +31,6 @@ app.use("/api/withdrawls", withdrawls);
 // DB & Server
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    app.listen(4000, () => console.log("Server running on port", process.env.PORT));
+    app.listen(3000, () => console.log("Server running on port", process.env.PORT));
   })
   .catch(err => console.log(err));
