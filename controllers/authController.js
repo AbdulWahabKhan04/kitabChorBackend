@@ -16,7 +16,9 @@ exports.register = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+      secure: true,     // important for HTTPS sites like Railway+Vercel
+      sameSite: 'None', // 3 days
     });
 
     res.status(201).json({ user: { id: user._id, name: user.name, email: user.email, institution:user.institution } });
@@ -38,6 +40,8 @@ exports.login = async (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 3 * 24 * 60 * 60 * 1000,
+        secure: true,     // important for HTTPS sites like Railway+Vercel
+        sameSite: 'None',
       });
       return res.json(teacher);
     }
@@ -50,6 +54,8 @@ exports.login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
+      secure: true,     // important for HTTPS sites like Railway+Vercel
+      sameSite: 'None',
     });
 
     res.json(user);
@@ -59,6 +65,7 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
+  res.cookie("token", "", { httpOnly: true, expires: new Date(0),  secure: true,     // important for HTTPS sites like Railway+Vercel
+    sameSite: 'None', });
   res.json({ message: "Logged out successfully" });
 };
