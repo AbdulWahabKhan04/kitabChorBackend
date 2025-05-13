@@ -15,7 +15,7 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors({ origin: 'https://kitabchor.vercel.app', credentials: true }));
+app.use(cors({ origin: 'https://www.kitabchor.com', credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
